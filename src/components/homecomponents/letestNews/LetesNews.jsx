@@ -1,71 +1,100 @@
-import { FaArrowRight } from "react-icons/fa6";
+import { FaArrowRight, FaCommentDots } from "react-icons/fa6";
 import { MdDateRange } from "react-icons/md";
-import { FaCommentDots } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAxiosPublic from "../../../hooks/axiosPublic/useAxiosPublic";
 
-const LetesNews = () => {
+const LatestNews = () => {
   const [latestNews, setLatestNews] = useState([]);
-  const axiosPublic = useAxiosPublic()
+  const axiosPublic = useAxiosPublic();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosPublic.get(`/home/latestNews`);
-        // console.log(response.data);
+        const response = await axiosPublic.get("/home/latestNews");
         setLatestNews(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching news:", error);
       }
-    }
-
+    };
     fetchData();
   }, [axiosPublic]);
+
   return (
-    <div >
-      <h1 className=" items-center text-4xl font-bold mb-2 mt-10 text-center w-full " >
-        Latest News & Articles
-      </h1>
-      <div className=" w-full lg:w-[calc(100%-20px)] lg:p-7 mt-8 lg:px-0 mb-3 md:gap-2 md:px-1 gap-3 mx-auto grid lg:grid-cols-3 justify-center md:grid-cols-3 grid-cols-1 " >
-        {
-          latestNews?.map((latestNew) =>
-            <div key={latestNew.id} className=" relative rounded w-full lg:w-full mx-auto h-[400px] justify-center ">
-              <div className=" w-[calc(100%-20px)] mx-auto md:w-full top-0 h-[300px] bg-cover  shadow-xl relative">
-                <img
-                  src={latestNew?.img1}
-                  className=" h-full w-full rounded-t-sm transform hover:scale-95 transition-transform duration-300 ease-in-out "
-                  alt="photo"
-                />
-              </div>
-              <div className="absolute bottom-[20px] w-full flex justify-center">
-                <div className=" px-3 py-2 rounded-md border left-6 right-6 bg-white w-10/12 items-center">
-                  <div className="flex items-center text-center  gap-4">
-                    <p className="  flex text-sm items-center gap-1  ">
-                      <MdDateRange></MdDateRange>{latestNew?.date}
-                    </p>
-                    <p className="flex  text-sm items-center gap-2">
-                      <FaCommentDots></FaCommentDots> {latestNew?.comment?.length} comment
-                    </p>
-                  </div>
-                  <h2 className=" mt-1 text-xl mb-2 font-semibold">
-                    {latestNew?.title}
-                  </h2>
-                  <div className=" flex justify-between  mt-2 mb-3">
-                    <Link to={`blog/${latestNew?._id}`}>
-                      <div className="flex hover:translate-x-1 justify-center  font-semibold p-1 rounded px-1 hover:bg-orange-300 items-center gap-2">
-                        <button className="text-[15px] ">Read more</button>
-                        <FaArrowRight className="  "></FaArrowRight>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        }
+    <section className="py-16 px-4 bg-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            Latest News & <span className="text-amber-500">Articles</span>
+          </h2>
+          <p className="mt-3 text-gray-600 text-sm max-w-md mx-auto">
+            Stay informed with the latest trends, tips, and insights from the
+            real estate world.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {latestNews.map((news, index) => (
+            <NewsCard key={news.id} news={news} featured={index === 0} />
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default LetesNews;
+const NewsCard = ({ news, featured }) => (
+  <div className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col">
+    {/* Image */}
+    <div className="relative h-52 overflow-hidden flex-shrink-0">
+      <img
+        src={news?.img1}
+        alt={news?.title}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+      {featured && (
+        <div className="absolute top-3 left-3">
+          <span className="text-[10px] font-bold uppercase tracking-wide bg-amber-500 text-white px-2.5 py-1 rounded-lg shadow">
+            Featured
+          </span>
+        </div>
+      )}
+    </div>
+
+    {/* Body */}
+    <div className="flex flex-col flex-1 p-5">
+      {/* Meta row */}
+      <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
+        <span className="flex items-center gap-1.5">
+          <MdDateRange className="text-amber-400 text-lg" />
+          {news?.date}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <FaCommentDots className="text-amber-400 text-lg" />
+          {news?.comment?.length ?? 0}{" "}
+          {news?.comment?.length === 1 ? "Comment" : "Comments"}
+        </span>
+      </div>
+
+      {/* Title */}
+      <h3 className="text-xl font-bold text-gray-800 leading-snug mb-3 line-clamp-2 group-hover:text-amber-600 transition-colors duration-200">
+        {news?.title}
+      </h3>
+
+      <div className="border-t border-dashed border-gray-100 mb-4 mt-auto" />
+
+      {/* Read more */}
+      <Link
+        to={`blog/${news?._id}`}
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors group/link"
+      >
+        Read More
+        <FaArrowRight className="text-xs group-hover/link:translate-x-0.5 transition-transform duration-200" />
+      </Link>
+    </div>
+  </div>
+);
+
+export default LatestNews;

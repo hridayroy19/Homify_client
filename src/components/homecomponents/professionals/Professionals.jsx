@@ -1,81 +1,143 @@
-import { FaFacebook } from "react-icons/fa";
-import { FaLinkedinIn } from "react-icons/fa6";
-import { FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaTwitter } from "react-icons/fa";
+import { FaLinkedinIn, FaArrowRight } from "react-icons/fa6";
 import { MdCall } from "react-icons/md";
 import { BiLogoGmail } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import useAxiosPublic from "../../../hooks/axiosPublic/useAxiosPublic";
 import { Link } from "react-router-dom";
-import { FaArrowRight } from "react-icons/fa6";
+
 const Professionals = () => {
   const [personInfos, setPersonInfos] = useState([]);
   const axiosPublic = useAxiosPublic();
-  useEffect(() => {
-    axiosPublic.get('/users/all/agent')
-      .then(data => {
-        const newData = data.data.slice(0, 4);
-        setPersonInfos(newData)
-      })
-  }, [axiosPublic]);
-  return (
-    <>
-      <div>
-        <h1 className=" items-center mt-5 mb-6 text-center font-black lg:text-4xl  text-xl ">
-          Meet the Realty Professionals
-        </h1>
-        <div className="grid justify-center mx-2 md:mx-auto md:grid-cols-2 grid-cols-1 xl:grid-cols-4 gap-2">
-          {
-            personInfos?.map((personInfo) =>
-              <div key={personInfo._id} className="card mx-auto xl:w-[320px] w-[300px] sm:w-[400px] md:w-[350px]  lg:w-[450px] mt-7 bg-white border">
-                <div className="group w-full h-[200px] md:h-[300px] relative border-slate-100 overflow-hidden">
-                  <img
-                    src={personInfo.photoURL}
-                    alt=""
-                    className="w-full h-full object-fit rounded-t-lg" />
-                  <div className="absolute top-0 right-full rounded-t-md w-full h-full group-hover:right-0 bg-[#29404729] backdrop-blur-[2px]  p-7 flex flex-col justify-center ">
-                    <div className=" items-center flex text-xl text-white text-center gap-5">
-                      <button className=" ml-[15%] rounded-full  hover:bg-orange-600 bg-orange-400 p-2 ">
-                        <Link to='https://twitter.com'><FaTwitter></FaTwitter></Link>
-                      </button>
 
-                      <button className="rounded-full bg-gray-300 p-2  hover:bg-gray-500 text-red-500 ">
-                        <Link to='https://facebook.com'><FaFacebook></FaFacebook></Link>
-                      </button>
-                      <button className=" rounded-full hover:bg-orange-600 bg-orange-400 p-2 ">
-                        <Link to='https://linkedin.com'><FaLinkedinIn></FaLinkedinIn></Link>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className=" mt-4 text-sm lg:text-base px-6 ">
-                  <Link to={`/agentProfiles/${personInfo?._id}`}><h2 className=" hover:underline font-bold text-base lg:text-xl ">
-                    {personInfo?.name}
-                    <div className="badge badge-secondary ml-3 ">{personInfo?.personalInfo?.listing} listing</div>
-                  </h2></Link>
-                  <p className="font-medium">{personInfo?.role}</p>
-                  <hr className=" bg-black mt-3 " />
-                  <div className=" justify-start mt-3 mb-3">
-                    <div className="flex items-center gap-2 font-semibold">
-                      <MdCall></MdCall>
-                      <h3> {personInfo?.phone} </h3>
-                    </div>
-                    <div className=" flex items-center gap-2 font-semibold">
-                      <h5>
-                        <BiLogoGmail></BiLogoGmail>
-                      </h5>
-                      {personInfo?.email}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )
-          }
+  useEffect(() => {
+    axiosPublic.get("/users/all/agent").then((res) => {
+      setPersonInfos(res.data.slice(0, 4));
+    });
+  }, [axiosPublic]);
+
+  return (
+    <section className="py-16 px-4 bg-gradient-to-b from-white to-amber-50/40">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            Meet the Realty
+            <span className="text-amber-500">Professionals</span>
+          </h2>
+          <p className="mt-3 text-gray-600 text-sm max-w-md mx-auto">
+            Our experienced agents are here to guide you through every step of
+            your real estate journey.
+          </p>
+        </div>
+
+        {/* ── Agent Cards ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+          {personInfos.map((person) => (
+            <AgentCard key={person._id} person={person} />
+          ))}
+        </div>
+
+        <div className="flex justify-center mt-10">
+          <Link
+            to="/allagent"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-500 hover:border-amber-500 hover:text-white text-amber-600 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+          >
+            See All Agents
+            <FaArrowRight className="text-xs" />
+          </Link>
         </div>
       </div>
-      <div className="mt-11 flex items-center justify-center">
-        <a href="/allagent" > <button className="flex items-center gap-2  p-1 py-1 shadow-2xl hover:bg-orange-400 hover:shadow-inner  px-4 rounded-3xl border  uppercase text-black border-yellow-400" > see more <FaArrowRight /> </button> </a>
-      </div>
-    </>
+    </section>
   );
 };
+
+const AgentCard = ({ person }) => (
+  <div className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col">
+    {/* Image + social overlay */}
+    <div className="relative h-56 overflow-hidden flex-shrink-0">
+      <img
+        src={person.photoURL}
+        alt={person.name}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      />
+
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+      {/* Social icons — slide up on hover */}
+      <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-center gap-3 pb-4">
+        {[
+          {
+            href: "https://twitter.com",
+            Icon: FaTwitter,
+            color: "bg-sky-500 hover:bg-sky-600",
+          },
+          {
+            href: "https://facebook.com",
+            Icon: FaFacebook,
+            color: "bg-blue-600 hover:bg-blue-700",
+          },
+          {
+            href: "https://linkedin.com",
+            Icon: FaLinkedinIn,
+            color: "bg-blue-500 hover:bg-blue-600",
+          },
+        ].map(({ href, Icon, color }) => (
+          <a
+            key={href}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            className={`w-8 h-8 rounded-full ${color} text-white flex items-center justify-center text-sm shadow-md transition-colors duration-200`}
+          >
+            <Icon />
+          </a>
+        ))}
+      </div>
+
+      {/* Listing badge */}
+      <div className="absolute top-3 right-3">
+        <span className="text-[10px] font-bold uppercase tracking-wide bg-amber-500 text-white px-2.5 py-1 rounded-lg shadow">
+          {person?.personalInfo?.listing} Listings
+        </span>
+      </div>
+    </div>
+
+    {/* Body */}
+    <div className="flex flex-col flex-1 p-5">
+      <Link to={`/agentProfiles/${person._id}`}>
+        <h2 className="font-bold text-gray-800  hover:text-amber-600 transition-colors text-2xl leading-snug">
+          {person?.name}
+        </h2>
+      </Link>
+      <p className="text-xs text-amber-500 font-semibold uppercase tracking-wide mt-0.5 mb-4 capitalize">
+        {person?.role}
+      </p>
+
+      <div className="border-t border-dashed border-gray-100 mb-4" />
+
+      <div className="flex flex-col gap-2 mt-auto">
+        <a
+          href={`tel:${person?.phone}`}
+          className="flex items-center gap-2 text-md text-gray-500 hover:text-amber-600 transition-colors"
+        >
+          <span className="w-6 h-6 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
+            <MdCall className="text-amber-500 text-lg" />
+          </span>
+          {person?.phone}
+        </a>
+        <a
+          href={`mailto:${person?.email}`}
+          className="flex items-center gap-2 text-md text-gray-500 hover:text-amber-600 transition-colors truncate"
+        >
+          <span className="w-6 h-6 rounded-full bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
+            <BiLogoGmail className="text-amber-500 text-lg" />
+          </span>
+          <span className="truncate">{person?.email}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+);
+
 export default Professionals;

@@ -5,13 +5,10 @@ const Contact = () => {
   return (
     <section className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* ── Card ── */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-8 py-12 sm:px-14 sm:py-14">
-          {/* Decorative amber glow blobs */}
           <div className="absolute -top-16 -left-16 w-56 h-56 rounded-full bg-amber-400 opacity-10 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-amber-500 opacity-10 blur-3xl pointer-events-none" />
 
-          {/* Dot grid pattern */}
           <div
             className="absolute inset-0 opacity-[0.04] pointer-events-none"
             style={{
