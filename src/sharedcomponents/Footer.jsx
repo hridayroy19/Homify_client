@@ -50,7 +50,7 @@ const Footer = () => {
             <p> Dhaka , PIN 503319 , Bangladesh </p>
             <p className=" email"> hrhridoyroy503@gmail.com </p>
           </div>
-          <div className=" col" data-aos="fade-left" data-aos-duration="1000">
+          <div className=" col">
             <h3 className=" text-xl  font-bold">
               {" "}
               Links{" "}

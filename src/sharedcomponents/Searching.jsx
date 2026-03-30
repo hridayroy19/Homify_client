@@ -7,7 +7,6 @@ const Searching = () => {
 
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
     setSearchInfo(data);
   };
   return (

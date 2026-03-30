@@ -1,21 +1,46 @@
 import Searching from "../../../sharedcomponents/Searching";
 import bgimage from "./bg.jpg";
-const Banner = () => {
-    return (
-        <div className=" w-full h-[500px] lg:h-[600px] text-slate-100">
-            <div className=' relative h-full'>
-                <img className=' absolute inset-0 brightness-[0.70] w-full h-full object-cover lg:object-fill' src={bgimage} alt="Banner JPG" />
 
-                {/* text and searching section  */}
-                <div className=" pt-10 lg:pt-24 bg-[#00000029] h-full relative p-4">
-                    <h1 className=" text-xl md:text-3xl w-full lg:text-5xl lg:w-3/4 mx-auto font-extrabold" data-aos="fade-down" >Find a place where you can be yourself</h1>
-                    <p className=' mx-auto text-base lg:text-2xl w-full lg:w-3/4 lg:my-6' data-aos="fade-down">If, you`re looking for place where you can be yourself, don`t give up. Keep searching untill you find a place that a place that feels like home.</p>
-                    {/* serching section  */}
-                    <Searching></Searching>
-                </div>
-            </div>
+const Banner = () => {
+  return (
+    <div className="relative w-full h-[500px] lg:h-[620px] overflow-hidden">
+      {/* Background image */}
+      <img
+        src={bgimage}
+        alt="Banner"
+        className="absolute inset-0 w-full h-full object-cover brightness-[0.55]"
+      />
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
+
+      {/* Content — fully centered */}
+      <div className="relative z-10 px-4 flex flex-col items-center justify-center h-full text-center text-white ">
+        <h1
+          className="text-2xl mt-7 sm:text-4xl lg:text-5xl font-extrabold leading-tight max-w-3xl"
+          data-aos="fade-down"
+        >
+          Find a Place Where You Can{" "}
+          <span className="text-amber-400">Be Yourself</span>
+        </h1>
+
+        {/* Subtext */}
+        <p
+          className="mt-4  text-sm sm:text-base lg:text-lg text-gray-200 max-w-xl leading-relaxed"
+          data-aos="fade-down"
+          data-aos-delay="100"
+        >
+          Keep searching until you find a place that truly feels like home. Your
+          perfect space is waiting for you.
+        </p>
+
+        {/* Search */}
+        <div className="w-full max-w-4xl">
+          <Searching />
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Banner;
