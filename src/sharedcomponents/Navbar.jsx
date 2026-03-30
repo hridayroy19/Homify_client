@@ -12,7 +12,7 @@ import { IoChatbubblesOutline } from "react-icons/io5";
 import { BiInfoCircle } from "react-icons/bi";
 import { RiKey2Line } from "react-icons/ri";
 
-const HomifyLogo = () => (
+export const HomifyLogo = () => (
   <svg
     width="36"
     height="36"
