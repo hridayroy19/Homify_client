@@ -1,6 +1,8 @@
-import { FaArrowRight } from "react-icons/fa6";
+import { FaArrowRight, FaRegHeart } from "react-icons/fa6";
 import { IoLocationSharp } from "react-icons/io5";
-import { IoGameControllerOutline } from "react-icons/io5";
+import { IoMdShare } from "react-icons/io";
+import { MdBed, MdBathtub } from "react-icons/md";
+import { BiArea } from "react-icons/bi";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -15,258 +17,193 @@ import {
   TelegramShareButton,
   TelegramIcon,
 } from "react-share";
-import { FaArrowTurnDown } from "react-icons/fa6";
-import { TiArrowMoveOutline } from "react-icons/ti";
-import { FaRegHeart } from "react-icons/fa6";
-import { IoMdShare } from "react-icons/io";
-// import Modal from "react-modal";
 import { NavLink } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../utils/provider/AuthProvider";
 import toast from "react-hot-toast";
 import useAxiosPublic from "../hooks/axiosPublic/useAxiosPublic";
+
+const SHARE_URL = "https://homifyestate-8556d.web.app/";
+
 const Property = ({ properties }) => {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { user } = useContext(AuthContext);
-  const title = properties.title;
-  let titles;
-  if (title?.length > 20) {
-    titles = title.slice(0, 20) + "...";
-  } else {
-    titles = title;
-  }
+  const [shareOpen, setShareOpen] = useState(false);
+  const [wishlisted, setWishlisted] = useState(false);
 
-  // add whilist
-  const handelWhilist = (properties) => {
-    const { author } = properties;
-    // console.log( author);
+  const title =
+    properties?.title?.length > 28
+      ? properties.title.slice(0, 28) + "…"
+      : properties?.title;
 
-    const addWhilist = {
+  const details = properties?.property_details ?? {};
+
+  const handleWishlist = () => {
+    const payload = {
       email: user?.email,
       image: properties.property_image,
       name: properties.title,
-      price: properties.property_details?.price,
+      price: details?.price,
       propety: properties._id,
-      author: author?.contact,
+      author: properties?.author?.contact,
     };
-    // console.log(addWhilist);
-
-    axiosPublic.post("/wish-lists", addWhilist).then((res) => {
-      // console.log(res.data);
+    axiosPublic.post("/wish-lists", payload).then((res) => {
       if (res.data) {
-        toast.success("Successfully added whilist !");
+        setWishlisted(true);
+        toast.success("Added to wishlist!");
       }
     });
   };
 
   return (
-    <div
-      key={properties?._id}
-      className="  p-2 relative  rounded  lg:w-full md:w-[300px] w-[350px] mx-auto h-[400px] justify-center "
-    >
-      <div className="lg:w-full md:w-[300px] top-0 h-[300px]   shadow-xl relative">
-        <img
-          src={properties?.property_image}
-          className=" h-full  w-full  rounded-t-md hover:scale-105 transform transition-transform duration-300 ease-in-out "
-          alt=""
-        />
-      </div>
-      {/* description part */}
-      <div className=" absolute bottom-[20px] w-full flex justify-center">
-        <div className="px-3   py-3 rounded-md shadow-lg bg-white lg:w-3/4 mr-3 md:w-[280px] xl:mr-4 md:mr-0 lg:mr-4  items-center ">
-          <h2 className=" mt-2 lg:text-[18px] text-sm mb-2 font-semibold">
-            {/* Hemosa Casa al Norte */} {titles}
-          </h2>
-          <div>
-            <p className=" font-semibold flex text-sm  items-center gap-1 mb-1 text-center">
-              <IoLocationSharp></IoLocationSharp> {properties?.location}
-            </p>
-          </div>
-          <div className="flex gap-3 mt-2 mb-1  text-[15px] font-medium">
-            <div className="flex items-center gap-1  ">
-              <IoGameControllerOutline className=" bg-slate-300 rounded-full text-[20px] p-1"></IoGameControllerOutline>
-              <button className=" text-sm">
-                beds {properties?.property_details?.bed_rooms}
-              </button>
-            </div>
-            <div className="flex items-center gap-1  ">
-              <FaArrowTurnDown className=" bg-slate-300 rounded-full text-[20px] p-1"></FaArrowTurnDown>
-              <button className=" text-sm">
-                baths {properties?.property_details?.baths}
-              </button>
-            </div>
-            <div className="flex items-center gap-1  ">
-              <TiArrowMoveOutline className=" bg-slate-300 rounded-full text-xs p-1"></TiArrowMoveOutline>
-              <button className=" text-sm">
-                {properties?.property_details?.size}sq Ft
-              </button>
-            </div>
-          </div>
-          <hr className=" w-[95%] mx-auto mt-2 font-bold " />
-          <div className=" flex justify-between px-2 mt-2 mb-2">
-            <div className="flex justify-center items-center gap-2">
-              <NavLink
-                to={`/properties/${properties._id}`}
-                className="font-semibold text-sm "
-              >
-                More Details
-              </NavLink>
-              <FaArrowRight className="rounded-full bg-base-300"></FaArrowRight>
-            </div>
-            {/* reation  */}
-            <div>
-              <div className="rating rating-sm">
-                <input
-                  type="radio"
-                  name="rating-6"
-                  className="mask mask-star-2 bg-orange-400"
-                  readOnly
-                />
-                <input
-                  type="radio"
-                  name="rating-6"
-                  className="mask mask-star-2 bg-orange-400"
-                  checked
-                  readOnly
-                />
-                <input
-                  type="radio"
-                  name="rating-6"
-                  className="mask mask-star-2 bg-orange-400"
-                  readOnly
-                />
-                <input
-                  type="radio"
-                  name="rating-6"
-                  className="mask mask-star-2 bg-orange-400"
-                  readOnly
-                />
-                <input
-                  type="radio"
-                  name="rating-6"
-                  className="mask mask-star-2 bg-orange-400"
-                  readOnly
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <>
+      {/* ── Card ── */}
+      <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        {/* ── Image ── */}
+        <div className="relative h-52 overflow-hidden flex-shrink-0">
+          <img
+            src={properties?.property_image}
+            alt={properties?.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
 
-      {/* icone setp photo  */}
-
-      <div className="absolute px-3  rounded-full  left-[60%] lg:left-[60%] lg:bottom-[180px] xl:bottom-[160px] bottom-[160px] items-center ">
-        <div className=" rounded-md text-white hover:bg-red-500 bg-orange-500 gap-3 px-2 py-1 ">
-          <p className=" font-semibold">
-            $ {properties?.property_details?.price}
-          </p>
-        </div>
-      </div>
-      {/* rent, Features and share section  */}
-      <div className=" absolute flex   flex-row-reverse top-5 left-10 justify-between mx-auto ">
-        <div className="px-3  rounded-full xl:ml-44 lg:ml-14 md:ml-12  ml-24 bottom-[340px]  w-[100px] items-center ">
-          <div className="flex  text-white  gap-2 ">
-            {/* share button  */}
-            <div>
-              <button
-                onClick={() =>
-                  document.getElementById("my_modal_5").showModal()
-                }
-              >
-                <IoMdShare className=" bg-gray-400 hover:bg-orange-500  rounded-full text-3xl p-1 " />
-              </button>
-
-              <dialog
-                id="my_modal_5"
-                className="modal modal-bottom sm:modal-middle"
-              >
-                <div className="modal-box">
-                  <h3 className="font-bold text-lg text-black text-center">
-                    Share in a post
-                  </h3>
-                  <div className="">
-                    <img
-                      src="https://i.ibb.co/GspjGPV/divider.png"
-                      alt=""
-                      className="w-full h-8"
-                    />
-                  </div>
-                  <p className="py-4 text-black">Share</p>
-                  <div className="flex gap-3">
-                    <FacebookShareButton
-                      url="https://homifyestate-8556d.web.app/"
-                      hashtag="#HomifyEstate"
-                    >
-                      <h1 className="text-black">
-                        <FacebookIcon className="rounded-full w-[60px] h-[60px]"></FacebookIcon>
-                      </h1>
-                    </FacebookShareButton>
-
-                    <TwitterShareButton
-                      url="https://homifyestate-8556d.web.app/"
-                      hashtag="#HomifyEstate"
-                    >
-                      <TwitterIcon className="rounded-full w-[60px] h-[60px]"></TwitterIcon>
-                    </TwitterShareButton>
-
-                    <LinkedinShareButton
-                      url="https://homifyestate-8556d.web.app/"
-                      hashtag="#HomifyEstate"
-                    >
-                      <LinkedinIcon className="rounded-full w-[60px] h-[60px]"></LinkedinIcon>
-                    </LinkedinShareButton>
-
-                    <WhatsappShareButton
-                      url="https://homifyestate-8556d.web.app/"
-                      hashtag="#HomifyEstate"
-                    >
-                      <WhatsappIcon className="rounded-full w-[60px] h-[60px]"></WhatsappIcon>
-                    </WhatsappShareButton>
-
-                    <EmailShareButton
-                      url="https://homifyestate-8556d.web.app/"
-                      hashtag="#HomifyEstate"
-                    >
-                      <EmailIcon className="rounded-full w-[60px] h-[60px]"></EmailIcon>
-                    </EmailShareButton>
-
-                    <TelegramShareButton
-                      url="https://homifyestate-8556d.web.app/"
-                      hashtag="#HomifyEstate"
-                    >
-                      <TelegramIcon className="rounded-full w-[60px] h-[60px]"></TelegramIcon>
-                    </TelegramShareButton>
-                  </div>
-                  <div className="modal-action">
-                    <form method="dialog">
-                      <button className="btn  btn-error text-white">
-                        Close
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </dialog>
-            </div>
-
-            <p onClick={() => handelWhilist(properties)}>
-              <FaRegHeart className=" bg-gray-400 hover:bg-orange-500  rounded-full text-3xl p-1 " />
-            </p>
-          </div>
-        </div>
-
-        <div className="px-3  rounded-full bottom-[300px]  w-[110px] items-center ">
-          <div className="text-white flex flex-col  gap-1 ">
-            <p className=" bg-black hover:bg-orange-400 items-center text-center p-1 font-bold rounded">
+          {/* Top-left badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+            <span className="px-2.5 py-1 rounded-lg bg-gray-900/80 text-white text-[11px] font-bold uppercase tracking-wide backdrop-blur-sm">
               {properties?.property_status}
-            </p>
-            <p className=" bg-red-400 hover:bg-orange-400 items-center text-center p-1 rounded font-bold">
-              Features
-            </p>
+            </span>
+            <span className="px-2.5 py-1 rounded-lg bg-amber-500 text-white text-[11px] font-bold uppercase tracking-wide">
+              Featured
+            </span>
+          </div>
+
+          {/* Top-right actions */}
+          <div className="absolute top-3 right-3 flex gap-2">
+            {/* Share */}
+            <button
+              onClick={() => setShareOpen(true)}
+              className="w-8 h-8 rounded-full bg-white/80 hover:bg-white backdrop-blur-sm flex items-center justify-center text-gray-600 hover:text-amber-500 transition-colors shadow-sm"
+            >
+              <IoMdShare className="text-base" />
+            </button>
+
+            {/* Wishlist */}
+            <button
+              onClick={handleWishlist}
+              className={`w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center transition-colors shadow-sm ${
+                wishlisted
+                  ? "bg-red-500 text-white"
+                  : "bg-white/80 hover:bg-white text-gray-600 hover:text-red-500"
+              }`}
+            >
+              <FaRegHeart className="text-sm" />
+            </button>
+          </div>
+
+          {/* Price badge — bottom right of image */}
+          <div className="absolute bottom-3 right-3">
+            <span className="px-3 py-1.5 rounded-xl bg-amber-500 text-white text-sm font-bold shadow-md">
+              ${details?.price?.toLocaleString?.() ?? details?.price}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex flex-col flex-1 p-4">
+          <h2 className="text-xl font-bold text-gray-800 mb-1 leading-snug">
+            {title}
+          </h2>
+
+          {/* Location */}
+          <p className="flex items-center gap-1 text-md text-gray-600 mb-3">
+            <IoLocationSharp className="text-amber-500 flex-shrink-0" />
+            {properties?.location}
+          </p>
+
+          {/* Stats row */}
+          <div className="flex items-center gap-3 text-xs text-gray-500 mb-4">
+            <span className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
+              <MdBed className="text-amber-400 text-xl" />
+              {details?.bed_rooms} Beds
+            </span>
+            <span className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
+              <MdBathtub className="text-amber-400 text-xl" />
+              {details?.baths} Baths
+            </span>
+            <span className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
+              <BiArea className="text-amber-400 text-xl" />
+              {details?.size} sqft
+            </span>
+          </div>
+
+          <div className="border-t border-dashed border-gray-100 mb-3" />
+
+          <div className="flex items-center justify-between mt-auto">
+            <NavLink
+              to={`/properties/${properties._id}`}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors group/link"
+            >
+              More Details
+              <FaArrowRight className="text-xs group-hover/link:translate-x-0.5 transition-transform duration-200" />
+            </NavLink>
+
+            {/* Stars */}
+            <div className="flex items-center gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <svg
+                  key={i}
+                  className={`w-3.5 h-3.5 ${i < 4 ? "text-amber-400" : "text-gray-200"}`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {shareOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+          onClick={() => setShareOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-base font-bold text-gray-800 text-center mb-1">
+              Share this Property
+            </h3>
+            <p className="text-xs text-gray-400 text-center mb-5">
+              Share with your friends and family
+            </p>
+
+            <div className="flex justify-center gap-3 flex-wrap">
+              {[
+                { Btn: FacebookShareButton, Icon: FacebookIcon },
+                { Btn: TwitterShareButton, Icon: TwitterIcon },
+                { Btn: LinkedinShareButton, Icon: LinkedinIcon },
+                { Btn: WhatsappShareButton, Icon: WhatsappIcon },
+                { Btn: EmailShareButton, Icon: EmailIcon },
+                { Btn: TelegramShareButton, Icon: TelegramIcon },
+              ].map(({ Btn, Icon }, i) => (
+                <Btn key={i} url={SHARE_URL} hashtag="#HomifyEstate">
+                  <Icon className="rounded-full w-11 h-11 hover:opacity-80 transition-opacity" />
+                </Btn>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setShareOpen(false)}
+              className="mt-6 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-semibold transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
