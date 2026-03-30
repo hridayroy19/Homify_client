@@ -20,7 +20,6 @@ const Review = () => {
 
   return (
     <section className="py-16 px-4 bg-gradient-to-b from-amber-50/60 to-white">
-      {/* ── Section Header ── */}
       <div className="text-center mb-12">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
           What Our Clients <span className="text-amber-500">Say</span>
@@ -60,7 +59,6 @@ const Review = () => {
         </Swiper>
       </div>
 
-      {/* Swiper nav button overrides */}
       <style>{`
         .swiper-button-next,
         .swiper-button-prev {
@@ -94,21 +92,17 @@ const ReviewCard = ({ review }) => (
       <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0">
         <FaQuoteLeft className="text-amber-400 text-sm" />
       </div>
-      {/* Star rating top-right */}
       <div className="flex-shrink-0">
         <Star stars={review?.rating} />
       </div>
     </div>
 
-    {/* Comment */}
     <p className="text-gray-800 text-md leading-relaxed flex-1 line-clamp-4">
       {review?.comment}
     </p>
 
-    {/* Divider */}
     <div className="my-4 border-t border-dashed border-gray-100" />
 
-    {/* User info */}
     <div className="flex items-center gap-3">
       <div className="relative flex-shrink-0">
         <img
