@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import useAxiosPublic from "../../hooks/axiosPublic/useAxiosPublic";
-// import SellCard from "./SellCard";
 import Property from "../../sharedcomponents/Property";
 import {
   MdOutlineKeyboardArrowLeft,
@@ -9,7 +8,6 @@ import {
 
 const Sell = () => {
   const [properties, setProperties] = useState([]);
-  // console.log(properties);
   const axiosPublic = useAxiosPublic();
   const Status = "Sale";
   useEffect(() => {
@@ -18,7 +16,7 @@ const Sell = () => {
         const response = await axiosPublic.get("/home/checkouttt");
         const data = response.data;
         const filteredProperties = data.filter(
-          (property) => property.property_status === Status
+          (property) => property.property_status === Status,
         );
         setProperties(filteredProperties);
       } catch (error) {
@@ -48,11 +46,12 @@ const Sell = () => {
         <button
           key={i}
           onClick={() => paginate(i)}
-          className={`border-none rounded-full w-[38px]   font-medium mx-2 ${currentPage === i ? " bg-gray-100 py-2" : ""
-            }`}
+          className={`border-none rounded-full w-[38px]   font-medium mx-2 ${
+            currentPage === i ? " bg-gray-100 py-2" : ""
+          }`}
         >
           {i}
-        </button>
+        </button>,
       );
     }
     return pageNumbers;
@@ -60,20 +59,20 @@ const Sell = () => {
 
   return (
     <>
-      <div  data-aos="zoom-in">
-        <img src="https://i.ibb.co/qjTbPpn/sale-photo.jpg" className=" w-full  h-full " />
+      <div className="bg-black">
+        <img
+          src="https://images.squarespace-cdn.com/content/v1/582b62b9e58c620cb223fdc9/1483381524278-NRSI1WDI0CBAA41TOMS8/residential-Home-banner.jpg?format=2500w"
+          className=" w-full  h-[450px] bg-cover bg-center object-cover opacity-80"
+        />
       </div>
-      {/* card section */}
       <div className=" w-full py-10 ">
         <div className=" flex justify-between px-2 mb-4">
-          {/* section title and description */}
           <div>
             <h1 className=" font-bold text-xl ml-3 lg:text-4xl py-4">
               Explore Our Sell Listings!
             </h1>
           </div>
 
-          {/* explore button  */}
           <div className=" btn self-start md:self-center border-[1px] my-6 md:my-0 border-amber-200 bg-transparent rounded-3xl font-bold">
             {" "}
             Propety {properties.length}{" "}

@@ -8,22 +8,24 @@ import LetesNews from "../../components/homecomponents/letestNews/LetesNews";
 import Review from "../../components/homecomponents/review/Review";
 import Slider from "../../components/homecomponents/slider/Slider";
 import HappyClinet from "../../components/homecomponents/happiClient/HappyClinet";
+import WelcomePopup from "../../components/homecomponents/welcomePoUp/WelcomePopup";
 
 const Home = () => {
-    return (
-        <div>
-            <Banner></Banner>
-            <Features></Features>
-            <Professionals></Professionals>
-            <LetesNews></LetesNews>
-            <Advertise></Advertise>
-            <Contact></Contact>
-            <Choose></Choose>
-            <Slider></Slider>
-            <HappyClinet/>
-            <Review></Review>
-        </div>
-    );
+  return (
+    <>
+      <WelcomePopup />
+      <Banner></Banner>
+      <Features></Features>
+      <Professionals></Professionals>
+      <LetesNews></LetesNews>
+      <Advertise></Advertise>
+      <Contact></Contact>
+      <Choose></Choose>
+      <Slider></Slider>
+      <HappyClinet />
+      <Review></Review>
+    </>
+  );
 };
 
 export default Home;

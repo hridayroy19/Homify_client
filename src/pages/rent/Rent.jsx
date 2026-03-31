@@ -15,7 +15,7 @@ const Rent = () => {
         const response = await axiosPublic.get("/home/checkouttt");
         const data = response.data;
         const filteredProperties = data.filter(
-          (property) => property.property_status === Status
+          (property) => property.property_status === Status,
         );
         setProperties(filteredProperties);
       } catch (error) {
@@ -51,7 +51,7 @@ const Rent = () => {
           }`}
         >
           {i}
-        </button>
+        </button>,
       );
     }
     return pageNumbers;
@@ -59,10 +59,10 @@ const Rent = () => {
 
   return (
     <>
-      <div className=" bg-black " data-aos="zoom-in">
+      <div className=" bg-black ">
         <img
-          src="https://i.ibb.co/gDV2fks/rent-4.jpg"
-          className=" w-full  h-full "
+          src="https://images.squarespace-cdn.com/content/v1/582b62b9e58c620cb223fdc9/1483381524278-NRSI1WDI0CBAA41TOMS8/residential-Home-banner.jpg?format=2500w"
+          className=" w-full  h-[450px] bg-cover bg-center object-cover opacity-80"
         />
       </div>
       {/* card section */}
