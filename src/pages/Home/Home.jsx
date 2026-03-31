@@ -7,6 +7,7 @@ import Features from "../../components/homecomponents/features/Features";
 import LetesNews from "../../components/homecomponents/letestNews/LetesNews";
 import Review from "../../components/homecomponents/review/Review";
 import Slider from "../../components/homecomponents/slider/Slider";
+import HappyClinet from "../../components/homecomponents/happiClient/HappyClinet";
 
 const Home = () => {
     return (
@@ -19,6 +20,7 @@ const Home = () => {
             <Contact></Contact>
             <Choose></Choose>
             <Slider></Slider>
+            <HappyClinet/>
             <Review></Review>
         </div>
     );

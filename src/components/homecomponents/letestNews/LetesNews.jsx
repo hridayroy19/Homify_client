@@ -21,13 +21,13 @@ const LatestNews = () => {
   }, [axiosPublic]);
 
   return (
-    <section className="py-16 px-4 bg-white">
+    <section className="py-10 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+        <div className="mb-5">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
             Latest News & <span className="text-amber-500">Articles</span>
           </h2>
-          <p className="mt-3 text-gray-600 text-sm max-w-md mx-auto">
+          <p className="mt-2 text-gray-400 text-sm max-w-md leading-relaxed">
             Stay informed with the latest trends, tips, and insights from the
             real estate world.
           </p>
@@ -79,7 +79,7 @@ const NewsCard = ({ news, featured }) => (
       </div>
 
       {/* Title */}
-      <h3 className="text-xl font-bold text-gray-800 leading-snug mb-3 line-clamp-2 group-hover:text-amber-600 transition-colors duration-200">
+      <h3 className="text-lg font-bold text-gray-800 leading-snug mb-3 line-clamp-2 group-hover:text-amber-600 transition-colors duration-200">
         {news?.title}
       </h3>
 

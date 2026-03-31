@@ -93,8 +93,9 @@ const Navbar = () => {
     { label: "Home", to: "", end: true, Icon: HiHome },
     { label: "Rent", to: "rent", end: false, Icon: RiKey2Line },
     { label: "Sale", to: "sell", end: false, Icon: BsBuilding },
-    { label: "Contact", to: "contact", end: false, Icon: IoChatbubblesOutline },
     { label: "About", to: "about", end: false, Icon: BiInfoCircle },
+
+    { label: "Contact", to: "contact", end: false, Icon: IoChatbubblesOutline },
   ];
 
   const avatarLetter = (userInfo?.name ||

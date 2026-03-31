@@ -86,13 +86,6 @@ const SOCIALS = [
   },
 ];
 
-const STATS = [
-  { value: "1.2K+", label: "Happy Clients" },
-  { value: "850+", label: "Properties Sold" },
-  { value: "12+", label: "Years Experience" },
-  { value: "98%", label: "Satisfaction Rate" },
-];
-
 /* ── Component ────────────────────────────────────────────────── */
 const Contact = () => {
   const form = useRef();
@@ -128,23 +121,6 @@ const Contact = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 py-14 flex flex-col gap-10">
-          {/* ── Stats Row ── */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {STATS.map(({ value, label }) => (
-              <div
-                key={label}
-                className="bg-white border border-gray-100 rounded-2xl px-5 py-5 text-center shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-              >
-                <p className="text-3xl font-extrabold text-amber-500">
-                  {value}
-                </p>
-                <p className="text-lg text-gray-400 font-medium mt-1">
-                  {label}
-                </p>
-              </div>
-            ))}
-          </div>
-
           {/* ── Info Cards ── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {INFO_CARDS.map(({ Icon, label, value, href }) => (
