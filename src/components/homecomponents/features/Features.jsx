@@ -15,8 +15,9 @@ const Features = () => {
       try {
         if (searchInfo) {
           const response = await axiosPublic.get(
-            `/home/checkout?want=${searchInfo?.want}&type=${searchInfo?.type}&location=${searchInfo?.location}`
+            `/home/checkout?want=${searchInfo?.want}&type=${searchInfo?.type}&location=${searchInfo?.location}`,
           );
+          console.log(response.data)
           setProperties(response.data);
         } else {
           const response = await axiosPublic.get("/home/features");
@@ -33,11 +34,8 @@ const Features = () => {
   return (
     <section className="py-16 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
-
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-10">
-
           <div>
-           
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
               Explore Our{" "}
               <span className="text-amber-500">Newest Listings</span>
@@ -60,8 +58,8 @@ const Features = () => {
 
         {properties?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <Property key={property._id} properties={property} />
+            {properties?.map((property) => (
+              <Property key={property?._id} properties={property} />
             ))}
           </div>
         ) : (
@@ -70,9 +68,12 @@ const Features = () => {
             <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center mb-4">
               <FaExternalLinkAlt className="text-amber-300 text-xl" />
             </div>
-            <h3 className="text-base font-semibold text-gray-700 mb-1">No properties found</h3>
+            <h3 className="text-base font-semibold text-gray-700 mb-1">
+              No properties found
+            </h3>
             <p className="text-sm text-gray-400 max-w-xs">
-              Try adjusting your search filters or browse all available listings.
+              Try adjusting your search filters or browse all available
+              listings.
             </p>
             <Link
               to="/properties"

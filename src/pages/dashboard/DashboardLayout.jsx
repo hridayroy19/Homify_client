@@ -1,91 +1,105 @@
-import { Link, Outlet } from 'react-router-dom';
-import logo from './logo2.png';
-import Agent from '../../components/dashboard/agent/Agent';
-
-import { useContext } from 'react';
-import { AuthContext } from '../../utils/provider/AuthProvider';
-import AdminNav from '../../components/dashboard/admin/AdminNav';
-import UserNav from '../../components/dashboard/user/UserNav';
-import { Toaster } from 'react-hot-toast';
+import { Link, Outlet } from "react-router-dom";
+import logo from "./logo2.png";
+import Agent from "../../components/dashboard/agent/Agent";
+import { useContext } from "react";
+import { AuthContext } from "../../utils/provider/AuthProvider";
+import AdminNav from "../../components/dashboard/admin/AdminNav";
+import UserNav from "../../components/dashboard/user/UserNav";
+import { Toaster } from "react-hot-toast";
 
 const DashboardLayout = () => {
-    const { userInfo } = useContext(AuthContext)
-    return (
-        <>
-            <div className=' overflow-x-hidden'>
-                <div>
-                    <Toaster />
-                </div>
-                <div className=" text-red-50 flex overflow-x-hidden flex-wrap">
-                    {/* small devices nab bar  */}
-                    <div className="navbar w-full lg:hidden z-20 bg-amber-200 ">
-                        <div className="navbar-start">
-                            <Link to={"/"} className="btn btn-ghost text-black text-xl">HomifyEstate</Link>
-                        </div>
-                        <div className="navbar-end">
-                            <div className="dropdown">
-                                <div className="drawer">
-                                    <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-                                    <div className="drawer-content">
-                                        {/* Page content here */}
-                                        <label htmlFor="my-drawer" className="btn bg-transparent drawer-button"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg></label>
-                                    </div>
-                                    <div className="drawer-side">
-                                        <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                                        <ul className="menu w-52 min-h-full bg-stone-700 text-white">
-                                            {
-                                                userInfo?.role == 'admin' &&
-                                                <AdminNav></AdminNav>
-                                            }
-                                            {
-                                                userInfo?.role == 'agent' &&
-                                                <Agent></Agent>
-                                            }
-                                            {
-                                                userInfo?.role == 'user' &&
-                                                <UserNav></UserNav>
-                                            }
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/* dashboard nav section */}
-                <div className=" hidden lg:flex fixed min-h-screen md:w-[250px]  bg-slate-200 text-black">
-                    <div className='w-full flex-wrap mt-4 '>
-                        {/* drawer head */}
-                        <div className=" w-full hidden lg:inline bg-slate-400 text-center">
-                            <img className=' w-20 h-10 mx-auto' src={logo} alt="" />
-                            <h1 className=' w-full text-center mb-2'> <Link to={'/'} className="font-bold mb-6 mx-auto text-center text-xl">HomifyEstate</Link></h1>
-                        </div>
-                        <hr className=' bg-black border-b-[1px] border-zinc-950' />
-                        <div>
-                            <ul className="menu w-full min-h-full text-black">
-                                {
-                                    userInfo?.role == 'admin' &&
-                                    <AdminNav></AdminNav>
-                                }
-                                {
-                                    userInfo?.role == 'agent' &&
-                                    <Agent></Agent>
-                                }
-                                {
-                                    userInfo?.role == 'user' &&
-                                    <UserNav></UserNav>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                {/* dashboard content section  */}
-                <div className=" top-16 lg:top-0 w-full md:w-[calc(100%-20px)] overflow-x-hidden absolute right-0 mx-auto lg:w-[calc(100%-250px)] text-black">
-                    <Outlet></Outlet>
-                </div>
+  const { userInfo } = useContext(AuthContext);
+
+  const NavContent = () => (
+    <>
+      {userInfo?.role === "admin" && <AdminNav />}
+      {userInfo?.role === "agent" && <Agent />}
+      {userInfo?.role === "user" && <UserNav />}
+    </>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+      <Toaster />
+
+      {/* ── Mobile topbar ── */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 h-14 bg-white border-b border-gray-200 shadow-sm">
+        <Link to="/" className="text-lg font-bold text-gray-800">
+          HomifyEstate
+        </Link>
+        <div className="drawer drawer-end w-auto">
+          <input id="mobile-drawer" type="checkbox" className="drawer-toggle" />
+          <div className="drawer-content">
+            <label htmlFor="mobile-drawer" className="btn btn-ghost btn-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h8m-8 6h16"
+                />
+              </svg>
+            </label>
+          </div>
+          <div className="drawer-side z-40">
+            <label
+              htmlFor="mobile-drawer"
+              aria-label="close sidebar"
+              className="drawer-overlay"
+            />
+            <div className="w-64 min-h-full bg-white flex flex-col py-4 px-3">
+              <Link to="/" className="flex items-center gap-2 px-2 mb-6">
+                <img src={logo} alt="logo" className="h-8 w-auto" />
+                <span className="font-bold text-gray-800">HomifyEstate</span>
+              </Link>
+              <NavContent />
             </div>
-        </>
-    )
+          </div>
+        </div>
+      </div>
+
+      {/* ── Desktop sidebar ── */}
+      <aside className="hidden lg:flex flex-col fixed top-0 left-0 h-screen w-[240px] bg-white border-r border-gray-200 z-20">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="flex items-center gap-3 px-5 py-4 border-b border-gray-100"
+        >
+          <img src={logo} alt="logo" className="h-8 w-auto" />
+          <span className="font-bold text-gray-800 text-base">
+            HomifyEstate
+          </span>
+        </Link>
+
+        {/* Nav */}
+        <div className="flex-1 overflow-y-auto py-4 px-3">
+          <NavContent />
+        </div>
+
+        {/* Footer hint */}
+        <div className="px-5 py-3 border-t border-gray-100 text-xs text-gray-400">
+          {userInfo?.role && (
+            <span className="capitalize bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+              {userInfo.role}
+            </span>
+          )}
+        </div>
+      </aside>
+
+      {/* ── Main content ── */}
+      <main className="lg:ml-[240px] pt-14 lg:pt-0 min-h-screen">
+        <div className="p-4 md:p-6">
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
 };
 
 export default DashboardLayout;
