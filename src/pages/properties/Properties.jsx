@@ -1,48 +1,70 @@
 import { useEffect, useState } from "react";
-import { MdOutlineNavigateBefore } from "react-icons/md";
-import { MdOutlineNavigateNext } from "react-icons/md";
-
+import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
 import { IoHome } from "react-icons/io5";
 import useAxiosPublic from "../../hooks/axiosPublic/useAxiosPublic";
 import Property from "../../sharedcomponents/Property";
 import Searching from "../../sharedcomponents/Searching";
-// import propatices from "../../public/data.json"
 
 const Properties = () => {
   const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 9;
   const axiosPublic = useAxiosPublic();
-  // this data is load from the db ;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosPublic.get("/home/allcheckout");
         const data = response.data;
-        console.log(data);
         setProperties(data);
+        setFilteredProperties(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [axiosPublic]);
 
-  //   pagination
+  const handleSearch = (data) => {
+    const { want, type, location } = data;
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerpage = 9;
-  const lastIndex = currentPage * recordsPerpage;
-  const firstIndex = lastIndex - recordsPerpage;
-  const records = properties.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(properties.length / recordsPerpage);
+    const filtered = properties.filter((property) => {
+      const matchStatus = want
+        ? property.property_status?.toLowerCase() === want.toLowerCase()
+        : true;
 
+      const matchType = type
+        ? property.property_details?.type?.toLowerCase() === type.toLowerCase()
+        : true;
+
+      const matchLocation = location
+        ? property.location?.toLowerCase().includes(location.toLowerCase())
+        : true;
+
+      return matchStatus && matchType && matchLocation;
+    });
+
+    setFilteredProperties(filtered);
+    setCurrentPage(1);
+  };
+
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = filteredProperties.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(filteredProperties.length / recordsPerPage);
   const numbers = [...Array(npage + 1).keys()].slice(1);
-  console.log(numbers);
+
+  const prepage = () => {
+    if (currentPage !== 1) setCurrentPage(currentPage - 1);
+  };
+  const nextpage = () => {
+    if (currentPage !== npage) setCurrentPage(currentPage + 1);
+  };
+  const changeCpage = (number) => setCurrentPage(number);
 
   return (
     <>
-      {/* BANNER SECTION  */}
-
       <section
         className="bg-gray-100 md:h-[500px] h-[350px] relative grid items-end"
         style={{
@@ -52,87 +74,79 @@ const Properties = () => {
           backgroundImage: "url(https://i.ibb.co/8PmVZMt/banner-bg.jpg)",
         }}
       >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
+
         <div className="bg-white opacity-25 w-full h-full absolute"></div>
         <div className=" relative h-full">
           <div className=" w-[90%] pt-24 md:w-[80%] z-20 lg:w-[890px] xl:w-[1200px] mx-auto ">
-            <h1 className="md:text-4xl  text-center  text-2xl lg:text-5xl font-bold">
+            <h1 className="md:text-4xl text-center text-2xl lg:text-5xl font-bold">
               Property Grid View <br />
-              <span className=" items-center flex  justify-center gap-1 text-sm lg:text-xl mt-7">
-                <IoHome></IoHome> Home . PROPERTY GRID VIEW
+              <span className="items-center flex justify-center gap-1 text-sm lg:text-xl mt-7">
+                <IoHome /> Home . PROPERTY GRID VIEW
               </span>
             </h1>
             <div className="">
-              <Searching></Searching>
+              {/* Searching with onSearch prop */}
+              <Searching onSearch={handleSearch} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* card section and pagination */}
-
-      <div className=" w-full py-10">
-
-        <div className="grid relative  w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3  mx-auto bg-slate-100 gap-5">
-          {records?.map((properties) => <Property key={properties._id} properties={properties}></Property>)}
+      <div className="w-full py-10 px-5">
+        <div className="grid relative w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto bg-slate-100 gap-5">
+          {records?.map((property) => (
+            <Property key={property._id} properties={property} />
+          ))}
         </div>
 
-        {/* pagination section  */}
-        <div className=" mt-12 max-w-full flex justify-center mx-auto  items-center text-center">
-          <ul className=" flex items-center text-center gap-3">
-            <li className=" font-bold p-2 cursor-pointer rounded-full ">
-              <a
+        <div className="mt-12 flex justify-center">
+          <ul className="inline-flex gap-5 items-center -space-x-px">
+            <li>
+              <button
                 onClick={prepage}
-                className="flex items-center bg-gray-300  hover:bg-gray-400  p-2 rounded-lg px-2 text-center "
+                disabled={currentPage === 1}
+                className={`flex items-center px-3 py-2 ml-0 text-sm font-medium rounded-l-lg border border-gray-300 bg-white hover:bg-amber-100 transition-colors ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                {" "}
-                <MdOutlineNavigateBefore></MdOutlineNavigateBefore> prev{" "}
-              </a>
+                <MdOutlineNavigateBefore className="mr-1" /> Prev
+              </button>
             </li>
-            {numbers?.map((number) => (
-              <li
-                className={`   hover:bg-gray-300  rounded-full py-2 px-2 ${currentPage === number ? "active" : ""
-                  }`}
-                key={number}
-              >
-                <a
-                  href="#"
-                  className=" text-xl font-bold p-2  "
+
+            {/* Page Numbers */}
+            {numbers.map((number) => (
+              <li key={number}>
+                <button
                   onClick={() => changeCpage(number)}
+                  className={`px-4 py-2 text-sm font-medium border border-gray-300 hover:bg-amber-300 hover:text-white transition-colors ${
+                    currentPage === number
+                      ? "bg-amber-500 text-white"
+                      : "bg-white text-gray-700"
+                  }`}
                 >
-                  {number}{" "}
-                </a>
+                  {number}
+                </button>
               </li>
             ))}
 
-            <li className=" p-2 cursor-pointer rounded-full font-bold">
-              <a
-                className="flex items-center bg-gray-300 hover:bg-gray-400 p-2 rounded-lg px-2 text-center "
+            {/* Next Button */}
+            <li>
+              <button
                 onClick={nextpage}
+                disabled={currentPage === npage}
+                className={`flex items-center px-3 py-2 text-sm font-medium rounded-r-lg border border-gray-300 bg-white hover:bg-amber-100 transition-colors ${
+                  currentPage === npage ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                {" "}
-                Next <MdOutlineNavigateNext></MdOutlineNavigateNext>{" "}
-              </a>
+                Next <MdOutlineNavigateNext className="ml-1" />
+              </button>
             </li>
           </ul>
         </div>
       </div>
     </>
   );
-
-  function prepage() {
-    if (currentPage !== 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  }
-
-  function changeCpage(number) {
-    setCurrentPage(number);
-  }
-  function nextpage() {
-    if (currentPage !== npage) {
-      setCurrentPage(currentPage + 1);
-    }
-  }
 };
 
 export default Properties;
