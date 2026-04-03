@@ -76,7 +76,7 @@ const Footer = () => {
               <a href="Privacy"> Privacy Policy </a>
             </li>
           </div>
-          <div className="col" data-aos="fade-left" data-aos-duration="1000">
+          <div className="col">
             <h3 className=" text-xl font-bold">
               {" "}
               NewsLetter{" "}

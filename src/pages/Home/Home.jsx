@@ -9,13 +9,16 @@ import Review from "../../components/homecomponents/review/Review";
 import Slider from "../../components/homecomponents/slider/Slider";
 import HappyClinet from "../../components/homecomponents/happiClient/HappyClinet";
 import WelcomePopup from "../../components/homecomponents/welcomePoUp/WelcomePopup";
+import { useState } from "react";
 
 const Home = () => {
+  const [searchData, setSearchData] = useState(null);
+
   return (
     <>
       <WelcomePopup />
-      <Banner></Banner>
-      <Features></Features>
+      <Banner onSearch={setSearchData}></Banner>
+      <Features searchData={searchData}></Features>
       <Professionals></Professionals>
       <LetesNews></LetesNews>
       <Advertise></Advertise>

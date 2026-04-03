@@ -1,7 +1,7 @@
 import Searching from "../../../sharedcomponents/Searching";
 import bgimage from "./bg.jpg";
 
-const Banner = () => {
+const Banner = ({ onSearch }) => {
   return (
     <div className="relative w-full h-[500px] lg:h-[620px] overflow-hidden">
       {/* Background image */}
@@ -36,7 +36,7 @@ const Banner = () => {
 
         {/* Search */}
         <div className="w-full max-w-4xl">
-          <Searching />
+          <Searching  onSearch={onSearch} />
         </div>
       </div>
     </div>

@@ -1,35 +1,47 @@
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useAxiosPublic from "../../../hooks/axiosPublic/useAxiosPublic";
 import Property from "../../../sharedcomponents/Property";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../../utils/provider/AuthProvider";
 
-const Features = () => {
-  const { searchInfo } = useContext(AuthContext);
+const Features = ({ searchData }) => {
+  console.log(searchData, "searchData");
   const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        if (searchInfo) {
-          const response = await axiosPublic.get(
-            `/home/checkout?want=${searchInfo?.want}&type=${searchInfo?.type}&location=${searchInfo?.location}`,
-          );
-          console.log(response.data)
-          setProperties(response.data);
-        } else {
-          const response = await axiosPublic.get("/home/features");
-          setProperties(response.data);
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      const response = await axiosPublic.get(`/home/features`);
+      setProperties(response.data);
+      setFilteredProperties(response.data);
     };
-
     fetchData();
-  }, [axiosPublic, searchInfo]);
+  }, [axiosPublic]);
+
+  useEffect(() => {
+    if (!searchData) return;
+
+    const { want, type, location } = searchData;
+
+    const filtered = properties.filter((property) => {
+      const matchStatus = want
+        ? property.property_status?.toLowerCase() === want.toLowerCase()
+        : true;
+
+      const matchType = type
+        ? property.property_details?.type?.toLowerCase() === type.toLowerCase()
+        : true;
+
+      const matchLocation = location
+        ? property.location?.toLowerCase().includes(location.toLowerCase())
+        : true;
+
+      return matchStatus && matchType && matchLocation;
+    });
+
+    setFilteredProperties(filtered);
+  }, [searchData, properties]);
 
   return (
     <section className="py-16 px-4 bg-white">
@@ -56,9 +68,9 @@ const Features = () => {
           </Link>
         </div>
 
-        {properties?.length > 0 ? (
+        {filteredProperties?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties?.map((property) => (
+            {filteredProperties?.map((property) => (
               <Property key={property?._id} properties={property} />
             ))}
           </div>
