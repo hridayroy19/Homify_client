@@ -26,12 +26,12 @@ const AuthProvider = ({ children }) => {
         const email = cuser?.email;
         if (email) {
           await axios.post(
-            "http://localhost:5000/jwt/signIn",
+            "https://homifyserver.vercel.app/jwt/signIn",
             { email },
             { withCredentials: true },
           );
           const result = await axios.get(
-            `http://localhost:5000/users/${email}`,
+            `https://homifyserver.vercel.app/users/${email}`,
             { withCredentials: true },
           );
           setInfo(result.data);
@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
             signout()
               .then(() => {
                 axios
-                  .post("http://localhost:5000/jwt/clear-token", {
+                  .post("https://homifyserver.vercel.app/jwt/clear-token", {
                     email: result?.data?.email,
                   })
                   .then(() => {

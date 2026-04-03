@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const axiosPrivate = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://homifyserver.vercel.app",
   withCredentials: true,
 });
 // const axiosPrivate = axios.create({
